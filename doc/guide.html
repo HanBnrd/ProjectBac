@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<!--Documentation d'un projet-->
+<!--auteur: Johann Benerradi-->
+<!--(c) Université de Lorraine 2017-->
+<html>
+<head>
+<title>ProjectBac</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="man-page.css">
+</head>
+<body>
+	<!--En-tete -->
+	<header>
+		<img src="img/lorraine.png" alt="logo LORIA">
+		<h1>Guide d'utilisation</h1>
+	</header>
+	<div class="main">
+		<!--Menu -->
+		<nav class="nav">
+			<div class="navitem">
+				<a href="index.html">Accueil</a>
+			</div>
+			<div class="navitem">
+				<a href="install.html">Installation</a>
+			</div>
+			<div class="navitem">
+				<a href="guide.html">Utilisation</a>
+			</div>
+			<div class="navitem">
+				<a href="dev.html">Développement</a>
+			</div>
+			<div class="navitem">
+				<a href="licence.html">Licence</a>
+			</div>
+		</nav>
+
+		<!-- Corps -->
+		<article class="article">
+			<p>Le dossier /<em>bin</em> contient plusieurs scripts pour lancer les
+				différents packages de l'application ainsi que des exemples de commandes.
+				Ces scripts peuvent aussi être adaptés à vos propres besoins.
+			</p>
+			<p>Un certain ordre d'exécution doit être respecté lors de la création de la
+				base de données : <em>bac.sh</em> doit être lancé avant <em>profil.sh</em>,
+				qui doit lui-même être lancé avant <em>candidat.sh</em>.
+			</p>
+
+
+			<h2>Format des fichiers d'entrée et sortie</h2>
+			<p>Comma-separated values (.csv)</p>
+
+			<h2>bac.sh</h2>
+			<p>Mise à jour des tables <em>epreuve</em> et <em>matiere</em>. [#1]</p>
+			<pre class="input">
+	%cd &lt;install directory&gt;
+	%cd bin
+	%./bac.sh
+			</pre>
+			<p> Arguments au standard POSIX :</p>
+			<ul>
+				<li>-e (ou --epreuve) &lt;fichier .csv des épreuves&gt;</li>
+				<li>-m (ou --matiere) &lt;fichier .csv des matières&gt;</li>
+				<li>-r (ou --uri) &lt;uri de la basse de données MySQL&gt;</li>
+				<li>-u (ou --user) &lt;nom de l'utilisateur MySQL&gt;</li>
+				<li>-p (ou --password) &lt;mot de passe de l'utilisateur MySQL&gt;</li>
+			</ul>
+
+			<h2>profil.sh</h2>
+			<p>Mise à jour des tables <em>profil</em> et <em>coeff</em>. [#2]</p>
+			<pre class="input">
+	%cd &lt;install directory&gt;
+	%cd bin
+	%./profil.sh
+			</pre>
+			<p> Arguments au standard POSIX :</p>
+			<ul>
+				<li>-s (ou --serie) &lt;fichier .csv des profils&gt;</li>
+				<li>-c (ou --coeff) &lt;fichier .csv des coefficients&gt;</li>
+				<li>-r (ou --uri) &lt;uri de la basse de données MySQL&gt;</li>
+				<li>-u (ou --user) &lt;nom de l'utilisateur MySQL&gt;</li>
+				<li>-p (ou --password) &lt;mot de passe de l'utilisateur MySQL&gt;</li>
+			</ul>
+
+			<h2>candidat.sh</h2>
+			<p>Mise à jour de la table <em>candidat</em>. [#3]</p>
+			<pre class="input">
+	%cd &lt;install directory&gt;
+	%cd bin
+	%./candidat.sh
+			</pre>
+			<p> Arguments au standard POSIX :</p>
+			<ul>
+				<li>-c (ou --candidat) &lt;fichier .csv des candidats&gt;</li>
+				<li>-r (ou --uri) &lt;uri de la basse de données MySQL&gt;</li>
+				<li>-u (ou --user) &lt;nom de l'utilisateur MySQL&gt;</li>
+				<li>-p (ou --password) &lt;mot de passe de l'utilisateur MySQL&gt;</li>
+			</ul>
+
+			<h2>note.sh</h2>
+			<p>Mise à jour de la table <em>note</em>. [#4]</p>
+			<pre class="input">
+	%cd &lt;install directory&gt;
+	%cd bin
+	%./note.sh
+			</pre>
+			<p> Arguments au standard POSIX :</p>
+			<ul>
+				<li>-n (ou --note) &lt;fichier .csv des notes&gt;</li>
+				<li>-r (ou --uri) &lt;uri de la basse de données MySQL&gt;</li>
+				<li>-u (ou --user) &lt;nom de l'utilisateur MySQL&gt;</li>
+				<li>-p (ou --password) &lt;mot de passe de l'utilisateur MySQL&gt;</li>
+			</ul>
+
+			<h2>suppression.sh</h2>
+			<p>Suppression d'un candidat des tables <em>candidat</em> et <em>note</em>. [#10]</p>
+			<pre class="input">
+	%cd &lt;install directory&gt;
+	%cd bin
+	%./suppression.sh
+			</pre>
+			<p> Arguments au standard POSIX :</p>
+			<ul>
+				<li>-c (ou --candidat) &lt;id du candidat à supprimer&gt;</li>
+				<li>-r (ou --uri) &lt;uri de la basse de données MySQL&gt;</li>
+				<li>-u (ou --user) &lt;nom de l'utilisateur MySQL&gt;</li>
+				<li>-p (ou --password) &lt;mot de passe de l'utilisateur MySQL&gt;</li>
+			</ul>
+
+			<h2>session.sh</h2>
+			<p>Exportation des notes du permier tour pour les étudiants d'une série. [#5]</p>
+			<p>Exportation des notes remplaçables au second tour pour les étudiants d'une
+				série. [#8]</p>
+			<p>Exportation des notes du deuxième tour pour les étudiants d'une série. [#9]</p>
+			<pre class="input">
+	%cd &lt;install directory&gt;
+	%cd bin
+	%./session.sh
+			</pre>
+			<p> Arguments au standard POSIX :</p>
+			<ul>
+				<li>-s (ou --serie) &lt;série à sélectionner&gt;</li>
+				<li>-t (ou --tour) &lt;tour à sélectionner : "1", "2", ou "R" pour
+					les notes remplaçables&gt;</li>
+				<li>-r (ou --uri) &lt;uri de la basse de données MySQL&gt;</li>
+				<li>-u (ou --user) &lt;nom de l'utilisateur MySQL&gt;</li>
+				<li>-p (ou --password) &lt;mot de passe de l'utilisateur MySQL&gt;</li>
+			</ul>
+
+			<h2>regle.sh</h2>
+			<p>Exportation des règles de calcul de notes pour un profil. [#11]</p>
+			<pre class="input">
+	%cd &lt;install directory&gt;
+	%cd bin
+	%./regle.sh
+			</pre>
+			<p> Arguments au standard POSIX :</p>
+			<ul>
+				<li>-s (ou --serie) &lt;série à sélectionner&gt;</li>
+				<li>-m (ou --mention) &lt;mention à sélectionner&gt;</li>
+				<li>-o (ou --option) &lt;spécialité à sélectionner&gt;</li>
+				<li>-e (ou --euro) &lt;section à sélectionner&gt;</li>
+				<li>-r (ou --uri) &lt;uri de la basse de données MySQL&gt;</li>
+				<li>-u (ou --user) &lt;nom de l'utilisateur MySQL&gt;</li>
+				<li>-p (ou --password) &lt;mot de passe de l'utilisateur MySQL&gt;</li>
+			</ul>
+
+			<h2>calcul.sh</h2>
+			<p>Exportation des moyennes au permier tour pour les étudiants d'une série. [#6]</p>
+			<p>Exportation des moyennes au second tour pour les étudiants d'une série. [#7]</p>
+			<pre class="input">
+	%cd &lt;install directory&gt;
+	%cd bin
+	%./calcul.sh
+			</pre>
+			<p> Arguments sont au standard POSIX :</p>
+			<ul>
+				<li>-s (ou --serie) &lt;série à sélectionner&gt;</li>
+				<li>-t (ou --tour) &lt;tour à sélectionner : "1" ou "2"&gt;</li>
+				<li>-r (ou --uri) &lt;uri de la basse de données MySQL&gt;</li>
+				<li>-u (ou --user) &lt;nom de l'utilisateur MySQL&gt;</li>
+				<li>-p (ou --password) &lt;mot de passe de l'utilisateur MySQL&gt;</li>
+			</ul>
+
+
+		</article>
+	</div>
+	<!-- Pied de page -->
+	<footer>
+		<table>
+			<tr>
+				<td>Université de Lorraine, Nancy France, 2017</td>
+				<td>Contact : <a href="mailto:johann.benerradi1@etu.univ-lorraine.fr">Johann Benerradi</a>
+				</td>
+			</tr>
+		</table>
+	</footer>
+</body>
+</html>

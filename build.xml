@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+ ===================================================================
+
+  Fichier build.xml générique
+  Authors:
+  Azim Roussanaly <azim.roussanaly@loria.fr>
+
+  Les cibles standards :
+  - compile
+  - javadoc
+  - srcdist
+  - bindist
+  - clean
+
+  Copyright (c) 2017 Université de Lorraine
+  ===================================================================
+-->
+
+<project default="compile" basedir=".">
+	<property environment="env"/>
+
+	<!-- Arborescence du projet : ce qui est créé : -->
+	<!-- 1) Dossiers -->
+	<property name="dir.lib" value="lib" />
+	<property name="dir.src" value="src" />
+	<property name="dir.doc" value="doc"/>
+	<property name="dir.img" value="${dir.src}/img"/>
+	<property name="dir.samples" value="samples"/>
+	<property name="dir.bin" value="bin"/>
+	<property name="dir.tools" value="tools"/>
+
+	<!-- 2) Fichiers -->
+	<property name="file.properties" value="proj.properties"/>
+	<property name="file.readme" value="README.txt"/>
+	<property name="file.licence" value="LICENSE.fr"/>
+	<property name="file.buildxml" value="build.xml"/>
+	<property name="file.installsh" value="install.sh"/>
+	<property name="file.installbat" value="install.bat"/>
+
+	<!-- Chargement des properties du projet -->
+	<property file="${file.properties}"/>
+
+	<!-- Arborescence du projet : ce qui est construit -->
+	<!-- 1) Dossiers -->
+	<property name="dir.build" value="build"/>
+	<property name="dir.build.classes" value="${dir.build}/classes"/>
+	<property name="dir.build.javadoc" value="${dir.build}/javadoc"/>
+	<property name="dir.build.lib" value="${dir.build}/lib"/>
+	<property name="dir.dist" value="dist"/>
+
+	<!-- 2) Fichiers -->
+	<property name="file.jar" value="${dir.build.lib}/${name}.jar"/>
+
+	<!--
+ =====================================================================
+ Déterminer le classpath : on prend tous les jars situés dans ${dir.lib}
+ =====================================================================
+ -->
+	<target name="classpath" description="Recherche des librairies">
+		<path id="classpath">
+			<fileset dir="${dir.lib}" includes="**/*.jar"/>
+		</path>
+		<echo message="Classpath déterminé automatiquement"/>
+	</target>
+
+	<!--
+ =====================================================================
+ Préparer les répertoires construits   : build, build/classes, build/lib
+ =====================================================================
+ -->
+	<target name="prepare" depends="classpath" description="Préparation des répertoires">
+		<mkdir dir="${dir.build}"/>
+		<mkdir dir="${dir.build.classes}"/>
+		<mkdir dir="${dir.build.lib}"/>
+		<echo message="Répertoires d'accueil construits"/>
+	</target>
+
+	<!--
+ =====================================================================
+Compiler les sources :
+1)on compile tous les java dans src
+2)on recopie les images de src/img, les fichiers properties dans src
+3) on crée un jar du projet courant dans build/lib
+4) on y ajoute tous les jar externes é partir de lib/
+ =====================================================================
+ -->
+	<target name="compile" depends="prepare" description="Compilation des fichiers sources">
+		<javac srcdir="${dir.src}" deprecation="true" destdir="${dir.build.classes}" fork="true"
+   			debug="${debug}" classpathref="classpath">
+		</javac>
+
+		<copy todir="${dir.build.classes}">
+			<fileset dir="${dir.src}" includes="**/*.properties"/>
+			<fileset dir="${dir.src}" includes="**/*.jpg **/*.gif"/>
+		</copy>
+
+		<jar jarfile="${file.jar}" basedir="${dir.build.classes}"/>
+
+		<copy todir="${dir.build.lib}">
+			<fileset dir="${dir.lib}" includes="**/*.jar"/>
+		</copy>
+		<echo message="Compilation effectuée"/>
+	</target>
+
+	<!--
+ =====================================================================
+ Préparation de srcdist et bindist : création du répertoire dist
+ =====================================================================
+ -->
+	<target name="prepare-dist">
+		<mkdir dir="${dir.dist}"/>
+	</target>
+
+	<!--
+ =====================================================================
+ Créer une distribution source : tar puis gzip des patternset concernés
+ =====================================================================
+ -->
+	<target name="srcdist" depends="prepare-dist" description="Création d'une distribution source">
+
+		<tar tarfile="${dir.dist}/${name}${version}-src.tar.gz" compression="gzip">
+
+			<tarfileset description="fichiers communs" dir="${basedir}" prefix="${name}">
+				<include name="${file.readme}"/>
+				<include name="${file.licence}"/>
+				<include name="${file.properties}"/>
+				<include name="${file.buildxml}"/>
+				<include name="${file.installsh}"/>
+				<include name="${file.installbat}"/>
+			</tarfileset>
+
+			<tarfileset description="exemples" dir="${dir.samples}" prefix="${name}/${dir.samples}">
+				<include name="**"/>
+			</tarfileset>
+
+			<tarfileset description="scripts" dir="${dir.bin}" prefix="${name}/${dir.bin}">
+				<include name="**"/>
+			</tarfileset>
+
+			<tarfileset description="documentation" dir="${dir.doc}" prefix="${name}/${dir.doc}">
+				<include name="**"/>
+				<exclude name="**/*.aux"/>
+				<exclude name="**/*.bbl"/>
+				<exclude name="**/*.log"/>
+			</tarfileset>
+
+			<tarfileset description="librairies jar" dir="${dir.lib}" prefix="${name}/${dir.lib}">
+				<include name="**/*.jar"/>
+			</tarfileset>
+
+			<tarfileset description="programmes source" dir="${dir.src}" prefix="${name}/${dir.src}">
+				<include name="**"/>
+			</tarfileset>
+
+			<tarfileset description="outils" dir="${dir.tools}" prefix="${name}/${dir.tools}">
+				<include name="**"/>
+			</tarfileset>
+		</tar>
+	</target>
+
+	<!--
+=====================================================================
+ Créer une distribution binaire : tar puis gzip des patternset concernés
+ =====================================================================
+ -->
+	<target name="bindist" depends="compile, javadoc, prepare-dist" description="Création d'une distribution binaire">
+
+		<tar tarfile="${dir.dist}/${name}${version}-bin.tar.gz" compression="gzip">
+
+			<tarfileset description="fichiers communs" dir="${basedir}" prefix="${name}">
+				<include name="${file.readme}"/>
+				<include name="${file.licence}"/>
+			</tarfileset>
+
+			<tarfileset description="exemples" dir="${dir.samples}" prefix="${name}/${dir.samples}">
+				<include name="**"/>
+			</tarfileset>
+
+			<tarfileset description="scripts" dir="${dir.bin}" prefix="${name}/${dir.bin}">
+				<include name="**"/>
+			</tarfileset>
+
+			<tarfileset description="documentation" dir="${dir.doc}" prefix="${name}/${dir.doc}">
+				<include name="**"/>
+				<exclude name="**/*.aux"/>
+				<exclude name="**/*.bbl"/>
+				<exclude name="**/*.log"/>
+			</tarfileset>
+
+			<tarfileset description="fichiers jar" dir="${dir.build.lib}" prefix="${name}/${dir.build.lib}">
+				<include name="**/*.jar"/>
+			</tarfileset>
+
+			<tarfileset description="fichiers javadoc" dir="${dir.build.javadoc}" prefix="${name}/${dir.build.javadoc}">
+				<include name="**"/>
+			</tarfileset>
+		</tar>
+	</target>
+
+	<!--
+ =====================================================================
+ Compiles the javadoc
+ =====================================================================
+ -->
+	<target name="javadoc" depends="prepare">
+		<mkdir dir="${dir.build.javadoc}"/>
+		<javadoc packagenames="${packages.base}.*"
+   sourcepath="${dir.src}"
+   excludepackagenames=""
+   defaultexcludes="yes"
+   destdir="${dir.build.javadoc}"
+   author="true"
+   version="true"
+   use="true"
+   classpathref="classpath"
+   windowtitle="${name} ${version} API">
+			<doctitle>
+				<![CDATA[<h1>${name} ${version} API</h1>]]></doctitle>
+	</javadoc>
+</target>
+
+<!--
+ =====================================================================
+ Faire le ménage
+ =====================================================================
+ -->
+<target name="clean">
+	<delete dir="${dir.build}"/>
+	<delete dir="${dir.dist}"/>
+</target>
+
+</project>

@@ -1,0 +1,134 @@
+/* styles pour la page d'un projet
+ * auteur: azim roussanaly
+ * (c) Université de Lorraine
+ */
+ 
+/*-------------*/
+/* Petit écran */
+/*-------------*/
+body {
+    display:flex;
+    flex-wrap: nowrap;
+    flex-direction:column;
+    font-family: Verdana, Arial;
+}
+
+header {
+	background:#aaa; 
+	color:white;
+}
+
+nav {
+	display: flex;
+	justify-content: space-around;
+	background:#aaa; 
+	color:white;
+}
+
+article{
+	border: 1px solid black;
+	margin: 5px;
+    padding: 15px;
+    overflow:auto;
+    height: 350px;
+}
+
+aside{
+	display:none
+}
+
+footer {
+	background:#aaa; 
+	color:white; 
+}
+
+h1{
+	text-align: center;
+}
+
+
+.main {
+    display: flex;
+    flex-direction:column;
+}
+
+.pub{
+	width: 120px;
+}
+
+.navitem {
+    color: white;
+    padding: 5px;
+	background: black;
+	border:1px solid white;
+}
+
+.code { 
+	font-family:Courier New;
+	background-color: #ffe6e6;
+	border: 1px solid red;
+	font-size: 80%;
+	overflow-x: auto;
+	overflow-y: hidden;
+} 
+
+.input {
+	color: black;
+	font-weight: bold;
+}
+
+.output {
+	color: grey;
+}
+
+.replaced {
+	background-color: yellow;
+}
+
+a { color: inherit; } 
+
+a:hover 
+{
+     color:#00A0C6; 
+     text-decoration:none; 
+     cursor:pointer;  
+}
+
+.pre{font-family: Courier;}
+
+/*-------------*/
+/* Ecran large */
+/*-------------*/
+
+@media screen and (min-width: 480px) {
+
+	body{
+		    width: auto;
+	}
+	.main {
+    	flex-direction:row;
+	}
+	
+	nav {
+		display: flex;
+    	flex-direction:column;
+		justify-content: center;
+		width: 200px;
+	}
+
+	aside{
+		display: flex;
+    	flex-direction:column;
+		background:#01B0F1;
+		margin: 5px;
+    	padding: 5px;
+	    width: 150px;
+
+	}
+	article{
+    	overflow:auto;
+    	height: 500px;
+}
+
+
+}
